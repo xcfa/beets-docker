@@ -1,0 +1,13 @@
+services:
+  beets:
+    image: ghcr.io/xcfa/beets-docker:latest
+    container_name: beets
+    ports:
+      - "8337:8337"
+    volumes:
+      - ./config:/config      # config.yaml + beets library database
+      - ./music:/music        # music collection
+      - ./plugins:/plugins    # user-installed python packages (survive re-creation)
+    # environment:
+    #   - BEETS_EXTRA_PACKAGES=/plugins
+    restart: unless-stopped
