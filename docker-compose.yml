@@ -8,6 +8,8 @@ services:
       - ./config:/config      # config.yaml + beets library database
       - ./music:/music        # music collection
       - ./plugins:/plugins    # user-installed python packages (survive re-creation)
+    # Set the running user explicitly; mounted dirs must be writable by it.
+    user: "1000:1000"
     # environment:
     #   - BEETS_EXTRA_PACKAGES=/plugins
     restart: unless-stopped

@@ -8,13 +8,19 @@ LABEL org.opencontainers.image.source="https://github.com/xcfa/beets-docker" \
 #   ffmpeg                - convert, replaygain (ffmpeg backend)
 #   libchromaprint-tools  - fpcalc for the chroma plugin
 #   flac, mp3val          - badfiles plugin
+#   tzdata                - make the TZ env variable work
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         ffmpeg \
         libchromaprint-tools \
         flac \
         mp3val \
+        tzdata \
     && rm -rf /var/lib/apt/lists/*
+
+# No USER is set: pick the uid:gid explicitly with docker's `user:` / --user.
+# Mounted volumes must be writable by whatever uid the container runs as.
+RUN mkdir -p /config /music /plugins
 
 # beets and plugin dependencies, pinned in requirements.txt for
 # reproducible builds (see the file for the package -> plugin mapping).
@@ -38,7 +44,7 @@ ENV BEETSDIR=/config \
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-VOLUME ["/config", "/music", "/plugins"]
+VOLUME ["/config", "/plugins"]
 EXPOSE 8337
 
 ENTRYPOINT ["/entrypoint.sh"]

@@ -18,6 +18,7 @@ or manually:
 
 ```sh
 docker run -d --name beets \
+  --user 1000:1000 \
   -p 8337:8337 \
   -v ./config:/config \
   -v ./music:/music \
@@ -38,6 +39,20 @@ docker exec -it beets beet import /music/incoming
 | `BEETSDIR` | `/config` | Directory with `config.yaml` and the library database |
 | `HOME` | `/config` | Home directory — plugin caches (`~/.cache`) persist in the volume too |
 | `BEETS_EXTRA_PACKAGES` | `/plugins` | Directory for user-installed python packages |
+| `UMASK` | unset | umask for created files, e.g. `022` |
+| `TZ` | unset | Timezone, e.g. `Europe/Moscow` |
+
+## Running user
+
+The image does not fix a user — set it explicitly with the standard docker mechanism (there is no `PUID`/`PGID` remapping):
+
+```yaml
+services:
+  beets:
+    user: "1000:1000"
+```
+
+Mounted volumes (`/config`, `/music`, `/plugins`) must be writable by that uid — set ownership on the host. Without `user:` the container runs as root, like any docker image.
 
 ## Installing your own python packages
 
