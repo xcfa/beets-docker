@@ -90,6 +90,9 @@ jobs:
       packages: write
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Download digests
         uses: actions/download-artifact@v4
         with:
@@ -107,6 +110,21 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Extract pinned beets version
+        id: beets
+        run: |
+          version="$(sed -n 's/^beets==\([0-9][^ ]*\).*/\1/p' requirements.txt)"
+          if [ -z "${version}" ]; then
+            echo "::error::could not find pinned beets version in requirements.txt"
+            exit 1
+          fi
+          echo "version=${version}" >> "${GITHUB_OUTPUT}"
+
+      # Release tag vX.Y.Z with beets 2.12.0 pinned produces:
+      #   2.12.0-X.Y.Z  - immutable: beets version + container version
+      #   2.12.0        - newest container shipping this beets version
+      #   X.Y.Z, X.Y, X - container version
+      # Push to master produces: latest, master
       - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v5
@@ -114,6 +132,8 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=ref,event=branch
+            type=semver,pattern=${{ steps.beets.outputs.version }}-{{version}}
+            type=semver,pattern=${{ steps.beets.outputs.version }}
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}

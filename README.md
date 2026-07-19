@@ -64,5 +64,8 @@ Two ways to install:
 The [docker-publish.yml](.github/workflows/docker-publish.yml) workflow builds the image natively on amd64 and arm64 runners in parallel (no QEMU emulation), merges the results into one multi-arch manifest and publishes it to GHCR:
 
 - push to `master` → `latest` and `master` tags;
-- git tag `vX.Y.Z` → image tags `X.Y.Z`, `X.Y`, `X`;
+- git tag `vX.Y.Z` (container version) → image tags encoding both the pinned beets version (taken from [requirements.txt](requirements.txt)) and the container version. E.g. tag `v1.0.0` with `beets==2.12.0` produces:
+  - `2.12.0-1.0.0` — immutable "beets version + container version";
+  - `2.12.0` — newest container shipping this beets version;
+  - `1.0.0`, `1.0`, `1` — container version;
 - pull request → build only, no publishing.
