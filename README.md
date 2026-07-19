@@ -61,7 +61,7 @@ Two ways to install:
 
 ## Image publishing
 
-The [docker-publish.yml](.github/workflows/docker-publish.yml) workflow builds the image (linux/amd64 + linux/arm64) and publishes it to GHCR:
+The [docker-publish.yml](.github/workflows/docker-publish.yml) workflow builds the image natively on amd64 and arm64 runners in parallel (no QEMU emulation), merges the results into one multi-arch manifest and publishes it to GHCR:
 
 - push to `master` → `latest` and `master` tags;
 - git tag `vX.Y.Z` → image tags `X.Y.Z`, `X.Y`, `X`;
