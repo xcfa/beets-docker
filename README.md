@@ -1,20 +1,20 @@
 # beets-docker
 
-Docker-образ [beets](https://beets.io) с предустановленными зависимостями для популярных плагинов. Собирается автоматически в GitHub Container Registry: `ghcr.io/xcfa/beets-docker`.
+Docker image of [beets](https://beets.io) with dependencies for popular plugins preinstalled. Built automatically and published to GitHub Container Registry: `ghcr.io/xcfa/beets-docker`.
 
-## Что внутри
+## What's inside
 
-Python-пакеты: `beets`, `python3-discogs-client` (discogs), `pylast` (lastgenre/lastfm), `flask` + `flask-cors` (web), `requests`, `requests-oauthlib` (beatport), `beets-vgmdb`, `pykakasi`, `pyacoustid` (chroma), `beautifulsoup4` + `langdetect` (lyrics), `Pillow` (fetchart/embedart), `python-mpd2` (mpdstats), `unidecode`.
+Python packages: `beets`, `python3-discogs-client` (discogs), `pylast` (lastgenre/lastfm), `flask` + `flask-cors` (web), `requests`, `requests-oauthlib` (beatport), `beets-vgmdb`, `pykakasi`, `pyacoustid` (chroma), `beautifulsoup4` + `langdetect` (lyrics), `Pillow` (fetchart/embedart), `python-mpd2` (mpdstats), `unidecode`.
 
-Системные утилиты: `ffmpeg` (convert, replaygain), `fpcalc` (chroma), `flac` и `mp3val` (badfiles).
+System tools: `ffmpeg` (convert, replaygain), `fpcalc` (chroma), `flac` and `mp3val` (badfiles).
 
-## Запуск
+## Usage
 
 ```sh
 docker compose up -d
 ```
 
-или вручную:
+or manually:
 
 ```sh
 docker run -d --name beets \
@@ -25,33 +25,33 @@ docker run -d --name beets \
   ghcr.io/xcfa/beets-docker:latest
 ```
 
-По умолчанию контейнер запускает `beet web` на порту 8337. Разовые команды:
+By default the container runs `beet web` on port 8337. One-off commands:
 
 ```sh
 docker exec -it beets beet import /music/incoming
 ```
 
-## Переменные среды
+## Environment variables
 
-| Переменная | По умолчанию | Описание |
+| Variable | Default | Description |
 |---|---|---|
-| `BEETSDIR` | `/config` | Каталог с `config.yaml` и базой библиотеки |
-| `HOME` | `/config` | Домашний каталог — кэши плагинов (`~/.cache`) тоже сохраняются в томе |
-| `BEETS_EXTRA_PACKAGES` | `/plugins` | Каталог для собственных python-пакетов |
+| `BEETSDIR` | `/config` | Directory with `config.yaml` and the library database |
+| `HOME` | `/config` | Home directory — plugin caches (`~/.cache`) persist in the volume too |
+| `BEETS_EXTRA_PACKAGES` | `/plugins` | Directory for user-installed python packages |
 
-## Свои python-пакеты
+## Installing your own python packages
 
-Каталог `BEETS_EXTRA_PACKAGES` (по умолчанию `/plugins`) добавляется в `PYTHONPATH` и назначается целью для pip (`PIP_TARGET`). Примонтируйте его с хоста — установленные пакеты переживут пересоздание контейнера.
+The `BEETS_EXTRA_PACKAGES` directory (`/plugins` by default) is added to `PYTHONPATH` and set as the pip install target (`PIP_TARGET`). Mount it from the host — installed packages survive container re-creation.
 
-Два способа установки:
+Two ways to install:
 
-1. Прямо в работающем контейнере (пакет попадёт в примонтированный каталог):
+1. Directly in the running container (the package lands in the mounted directory):
 
    ```sh
    docker exec -it beets pip install beets-alternatives
    ```
 
-2. Положить `requirements.txt` в каталог `plugins` на хосте — entrypoint установит пакеты при старте контейнера (и переустановит при изменении файла):
+2. Put a `requirements.txt` into the `plugins` directory on the host — the entrypoint installs the packages on container start (and reinstalls when the file changes):
 
    ```
    # plugins/requirements.txt
@@ -59,10 +59,10 @@ docker exec -it beets beet import /music/incoming
    beetcamp
    ```
 
-## Публикация образа
+## Image publishing
 
-Workflow [docker-publish.yml](.github/workflows/docker-publish.yml) собирает образ (linux/amd64 + linux/arm64) и публикует в GHCR:
+The [docker-publish.yml](.github/workflows/docker-publish.yml) workflow builds the image (linux/amd64 + linux/arm64) and publishes it to GHCR:
 
-- push в `master` → тег `latest` и `master`;
-- тег `vX.Y.Z` → тег образа `X.Y.Z`;
-- pull request → только сборка без публикации.
+- push to `master` → `latest` and `master` tags;
+- git tag `vX.Y.Z` → image tags `X.Y.Z`, `X.Y`, `X`;
+- pull request → build only, no publishing.
