@@ -4,7 +4,7 @@ Docker image of [beets](https://beets.io) with dependencies for popular plugins 
 
 ## What's inside
 
-Python packages: `beets`, `python3-discogs-client` (discogs), `pylast` (lastgenre/lastfm), `flask` + `flask-cors` (web), `requests`, `requests-oauthlib` (beatport), `beets-vgmdb`, `pykakasi`, `pyacoustid` (chroma), `beautifulsoup4` + `langdetect` (lyrics), `Pillow` (fetchart/embedart), `python-mpd2` (mpdstats), `unidecode`.
+Python packages (versions pinned in [requirements.txt](requirements.txt) for reproducible builds): `beets`, `python3-discogs-client` (discogs), `pylast` (lastgenre/lastfm), `flask` + `flask-cors` (web), `requests`, `requests-oauthlib` (beatport), `beets-vgmdb`, `pykakasi`, `pyacoustid` (chroma), `beautifulsoup4` + `langdetect` (lyrics), `Pillow` (fetchart/embedart), `python-mpd2` (mpdstats), `unidecode`.
 
 System tools: `ffmpeg` (convert, replaygain), `fpcalc` (chroma), `flac` and `mp3val` (badfiles).
 

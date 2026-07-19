@@ -16,30 +16,11 @@ RUN apt-get update \
         mp3val \
     && rm -rf /var/lib/apt/lists/*
 
-# Requested plugin dependencies + extras used by common beets plugins:
-#   pyacoustid            - chroma
-#   flask, flask-cors     - web
-#   beautifulsoup4, langdetect - lyrics
-#   Pillow                - fetchart/embedart artwork resizing
-#   requests-oauthlib     - beatport
-#   python-mpd2           - mpdstats/mpdupdate
-#   unidecode             - path transliteration
-RUN pip install --no-cache-dir \
-        beets \
-        python3-discogs-client \
-        pylast \
-        flask \
-        flask-cors \
-        requests \
-        requests-oauthlib \
-        beets-vgmdb \
-        pykakasi \
-        pyacoustid \
-        beautifulsoup4 \
-        langdetect \
-        Pillow \
-        python-mpd2 \
-        unidecode
+# beets and plugin dependencies, pinned in requirements.txt for
+# reproducible builds (see the file for the package -> plugin mapping).
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt \
+    && rm /tmp/requirements.txt
 
 # BEETSDIR              - beets config/library location (mount it to keep state)
 # HOME                  - also /config so plugin caches (~/.cache) persist,

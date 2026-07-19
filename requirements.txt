@@ -1,0 +1,20 @@
+# Pinned versions for reproducible image builds.
+beets==2.12.0
+
+# Requested plugin dependencies
+python3-discogs-client==2.9     # discogs
+pylast==7.1.0                   # lastgenre / lastfm
+flask==3.1.3                    # web
+requests==2.34.2
+beets-vgmdb==1.3.5
+pykakasi==2.3.0
+
+# Extras used by common beets plugins
+flask-cors==6.0.5               # web
+requests-oauthlib==2.0.0        # beatport
+pyacoustid==1.3.1               # chroma
+beautifulsoup4==4.15.0          # lyrics
+langdetect==1.0.9               # lyrics
+Pillow==12.3.0                  # fetchart / embedart artwork resizing
+python-mpd2==3.1.1              # mpdstats / mpdupdate
+unidecode==1.4.0                # path transliteration
