@@ -8,6 +8,8 @@ Python packages (versions pinned in [requirements.txt](requirements.txt) for rep
 
 System tools: `ffmpeg` (convert, replaygain), `fpcalc` (chroma), `flac` and `mp3val` (badfiles).
 
+Note: `beets-vgmdb` installs its plugin as `VGMplug`, so enable it under that name (`plugins: ... VGMplug`) and use `VGMplug:` for its config section.
+
 ## Usage
 
 ```sh

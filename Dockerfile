@@ -26,7 +26,11 @@ RUN mkdir -p /config /music /plugins
 # reproducible builds (see the file for the package -> plugin mapping).
 COPY requirements.txt /tmp/requirements.txt
 RUN pip install --no-cache-dir -r /tmp/requirements.txt \
-    && rm /tmp/requirements.txt
+    && rm /tmp/requirements.txt \
+    # beets-vgmdb depends on the PyPI "pathlib" package, a dead python 2
+    # backport that drops a pathlib.py into site-packages. The plugin uses the
+    # stdlib module anyway, so drop the backport instead of shipping it.
+    && pip uninstall -y pathlib
 
 # BEETSDIR              - beets config/library location (mount it to keep state)
 # HOME                  - also /config so plugin caches (~/.cache) persist,
